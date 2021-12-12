@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+	<configuration-properties doc:name="Configuration properties" doc:id="3fd68def-9c10-4baa-9609-e526bab6ea5a" file="config\dev-config.yaml" />
+	<configuration doc:name="Configuration" doc:id="f073984d-dfb6-4677-8b92-57b0d533dc77" defaultErrorHandler-ref="globalError_Handler" />
+	<api-gateway:autodiscovery apiId="17499619" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="e86cdfcf-bb16-4ea7-a20b-f56690b2cd76" flowRef="exp-insurance-company-api-v1-main" />
+</mule>

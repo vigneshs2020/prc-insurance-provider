@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="aad432df-baab-4102-b68d-cb60f522af47" basePath="/api">
+		<http:request-connection host="${prc.insurance.host}" port="${prc.insurance.port}" />
+	</http:request-config>
+	<flow name="getInfoFlow" doc:id="1295b8ee-fffe-4fb3-9bee-cb697ad6c05f" >
+		<http:request method="GET" doc:name="getCompanyInfoRequest" doc:id="074cec88-28c9-40f6-a8b1-eb3fd3ab76d3" config-ref="HTTP_Request_configuration" path="/info">
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"id" : attributes.queryParams.id
+}]]]></http:query-params>
+		</http:request>
+	</flow>
+	<flow name="postProviderFlow" doc:id="6bd86f25-4a30-4d6a-a3cf-d2cd93dabfd5" >
+		<http:request method="POST" doc:name="postInfoRequest" doc:id="81b468e7-ed02-4c38-bdba-a04180ad164f" config-ref="HTTP_Request_configuration" path="/provider">
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"id" : attributes.queryParams.id
+}]]]></http:query-params>
+		</http:request>
+	</flow>
+</mule>

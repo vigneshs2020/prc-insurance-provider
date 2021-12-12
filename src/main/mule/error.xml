@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<error-handler name="globalError_Handler" doc:id="ec150a2e-9ca1-4986-a3c6-67e8c8d074fe" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="6b15cb85-a190-4a23-93fc-21abf66ef8df" >
+			<choice doc:name="Choice" doc:id="f6b8f701-b91a-4d28-8749-8983988112d2" >
+				<when expression="#[error.errorType.namespace=='APIKIT']">
+					<choice doc:name="Choice" doc:id="928cd904-eed2-415b-93c9-8e7cd41d347a" >
+						<when expression="#[error.errorType.identifier=='BAD_REQUEST']">
+							<set-variable value="400" doc:name="APIKIT:BAD_REQ" doc:id="768b91cb-2f47-415b-be04-9370fd5727c3" variableName="httpStatus"/>
+						</when>
+						<when expression="#[error.errorType.identifier=='NOT_FOUND']">
+							<set-variable value="404" doc:name="APIKIT: NOT_FOUND" doc:id="c1f4f044-cb71-432b-bd29-0a127524a4b3" variableName="httpStatus"/>
+						</when>
+						<when expression="#[error.errorType.identifier=='METHOD_NOT_ALLOWED']">
+							<set-variable value="405" doc:name="APIKIT:METHOD_NOT_ALLOWED" doc:id="6cd27fc8-6710-4098-9536-cdb42621ab51" variableName="httpStatus"/>
+						</when>
+						<when expression="#[error.errorType.identifier=='NOT_ACCEPTABLE']">
+							<set-variable value="406" doc:name="APIKIT:NOT_ACCEPTABLE" doc:id="71e19202-b36a-4d4f-b8d6-0e865df7a28a" variableName="httpStatus"/>
+						</when>
+						<when expression="#[error.errorType.identifier=='UNSUPPORTED_MEDIA_TYPE']">
+							<set-variable value="415" doc:name="APIKIT:UNSUPPORTED_MEDIA_TYPE" doc:id="2747fc49-1e02-4540-8679-edc2061658c3" variableName="httpStatus"/>
+						</when>
+						<when expression="#[error.errorType.identifier=='NOT_IMPLEMENTED']">
+							<set-variable value="501" doc:name="APIKIT:NOT_IMPLEMENTED" doc:id="70bed1d8-7d44-432c-a7ed-7f161d53fbb1" variableName="httpStatus"/>
+						</when>
+					</choice>
+				</when>
+				<otherwise>
+					<ee:transform doc:name="Transform Message" doc:id="5050da62-5726-46e1-a425-eb0d769afbdf">
+						<ee:message>
+							<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": error.description
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					<set-variable value="556" doc:name="HTTP RESPONSE CODE" doc:id="b7fb3c38-0bcd-450a-a79e-83c618d291ee" variableName="httpStatus"/>
+				</otherwise>
+			</choice>
+			<ee:transform doc:name="Transform Message" doc:id="9fbed329-8da2-42a6-abb1-9e58d3cb77d4">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+</mule>
